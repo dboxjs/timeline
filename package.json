@@ -1,0 +1,25 @@
+{
+  "name": "@dboxjs/dbox-timeline",
+  "version": "0.0.1",
+  "description": "dboxjs timeline",
+  "main": "timeline.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dboxjs/dbox-timeline.git"
+  },
+  "keywords": [
+    "d3",
+    "dboxjs",
+    "dbox",
+    "timeline"
+  ],
+  "author": "alecs.garza@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dboxjs/dbox-timeline/issues"
+  },
+  "homepage": "https://github.com/dboxjs/dbox-timeline#readme"
+}
