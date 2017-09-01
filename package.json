@@ -14,7 +14,8 @@
     "d3",
     "dboxjs",
     "dbox",
-    "timeline"
+    "timeline",
+    "charts"
   ],
   "author": "alecs.garza@gmail.com",
   "license": "MIT",
