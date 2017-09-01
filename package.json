@@ -22,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/dboxjs/timeline/issues"
   },
-  "homepage": "https://github.com/dboxjs/timeline#readme"
+  "homepage": "https://github.com/dboxjs/timeline#readme",
+  "devDependencies": {
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.0"
+  }
 }
