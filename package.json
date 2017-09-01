@@ -1,5 +1,5 @@
 {
-  "name": "@dboxjs/dbox-timeline",
+  "name": "@dboxjs/timeline",
   "version": "0.0.1",
   "description": "dboxjs timeline",
   "main": "timeline.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dboxjs/dbox-timeline.git"
+    "url": "git+https://github.com/dboxjs/timeline.git"
   },
   "keywords": [
     "d3",
@@ -19,7 +19,7 @@
   "author": "alecs.garza@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dboxjs/dbox-timeline/issues"
+    "url": "https://github.com/dboxjs/timeline/issues"
   },
-  "homepage": "https://github.com/dboxjs/dbox-timeline#readme"
+  "homepage": "https://github.com/dboxjs/timeline#readme"
 }
