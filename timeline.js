@@ -2,11 +2,13 @@
  * Single and multiline timelines
  */
 
-export default function(config) {
+export default function(config, helper) {
 
   var parseDate = d3.timeParse('%Y-%m-%d');
 
-  function Timeline(config){
+  var Timeline = Object.create(helper);
+
+  Timeline.init = function(config){
     var vm = this;
     vm._config = config ? config : {};
     vm._data = [];
@@ -41,50 +43,56 @@ export default function(config) {
 
   //-------------------------------
   //User config functions
-  Timeline.prototype.x = function(col){
+  Timeline.x = function(col){
     var vm = this;
     vm._config.x = col;
     return vm;
   }
 
-  Timeline.prototype.y = function(col){
+  Timeline.y = function(col){
     var vm = this;
     vm._config.y = col;
     return vm;
   }
 
-  Timeline.prototype.series = function(arr){
+  Timeline.series = function(arr){
     var vm = this;
     vm._config.series = arr;
     return vm;
   }
 
-  Timeline.prototype.color = function(col){
+  Timeline.fill = function(col){
     var vm = this;
-    vm._config.color = col;
+    vm._config.fill = col;
     return vm;
   }
 
-  Timeline.prototype.end = function(){
+  Timeline.colors = function(colors) {
+    var vm = this;
+    if(Array.isArray(colors)) {
+      //Using an array of colors for the range 
+      vm._config.colors = colors;
+    } else {
+      //Using a preconfigured d3.scale
+      vm._scales.color = colors;
+    }
+    return vm;
+  }
+
+
+  Timeline.end = function(){
     var vm = this;
     return vm._chart;
   }
 
   //-------------------------------
   //Triggered by the chart.js;
-  Timeline.prototype.chart = function(chart){
-    var vm = this;
-    vm._chart = chart;
-    return vm;
-  }
-
-
-  Timeline.prototype.data = function(data){
+  Timeline.data = function(data){
     var vm = this;
 
     vm._data = data.map(function(d){
       d.x = parseDate(d[vm._config.x]);
-      d.color = d[vm._config.color];
+      d.color = d[vm._config.fill];
       delete(d[vm._config.x]);
       return d;
     });
@@ -103,20 +111,9 @@ export default function(config) {
     return vm;
   }
 
-  Timeline.prototype.scales = function(s){
+  Timeline.scales = function(){
     var vm = this;
-    vm._scales = s;
-    return vm;
-  }
 
-  Timeline.prototype.axes = function(a){
-    var vm = this;
-    vm._axes = a;
-    return vm;
-  }
-
-  Timeline.prototype.domains = function(){
-    var vm = this;
     vm._xMinMax = d3.extent(vm._data, function(d) { return d.x; });
 
     vm._yMinMax = [
@@ -124,59 +121,84 @@ export default function(config) {
       d3.max(vm._lines, function(c) { return d3.max(c.values, function(v) { return v.y; }); })
     ];
 
+    config = {
+      column: vm._config.x,
+      type: vm._config.xAxis.scale,
+      range: [0, vm.chart.width],
+      minZero: false
+    };
+    vm._scales.x = vm.utils.generateScale(vm._data, config);
+
+
+    config = {
+      column: vm._config.y,
+      type: vm._config.yAxis.scale,
+      range: [vm.chart.height, 0],
+      minZero: false
+    };
+    vm._scales.y = vm.utils.generateScale(vm._data, config);
+
+
     vm._scales.x.domain(vm._xMinMax)
     vm._scales.y.domain(vm._yMinMax)
 
-    console.log(vm._scales.x.domain(), vm._chart._scales.x.domain())
+    if(vm._config.hasOwnProperty('colors'))
+      vm._scales.color = d3.scaleOrdinal(vm._config.colors);
+    else
+      vm._scales.color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    vm._chart._scales = vm._scales;
 
     return vm;
-  };
+  }
 
-  Timeline.prototype.draw = function(){
+
+  Timeline.draw = function(){
     var vm = this;
-
-    var lines = vm._chart._svg.selectAll(".lines")
+    var lines = vm.chart.svg().selectAll(".lines")
       .data(vm._lines)
     .enter().append("g")
       .attr("class", "lines");
 
-    var path = vm._chart._svg.selectAll(".lines").append("path")
+    var path = vm.chart.svg().selectAll(".lines").append("path")
       .attr("class", "line")
       .attr("d", function(d) {
         return vm._line(d.values);
       })
-      .style("stroke", function(d){
+      /* .style("stroke", function(d){
         if (d.name == "Airbus"){
           return "rgb(000,255,000)";
         }else {
           return "#000";
         }
-      });
+      }) */
+      .attr("stroke", function(d){   
+        return vm._scales.color !== false ? vm._scales.color(d.name): vm._getQuantileColor(d.name,'default');
+      })
+      .attr('fill','none');
 
 
-    var t = textures.lines().thicker();
+    //var t = textures.lines().thicker();
 
-    vm._chart._svg.call(t);
+    //vm.chart.svg().call(t);
 
 
-    vm._area.y0(vm._scales.y(vm._yMinMax[0]));
+    /* vm._area.y0(vm._scales.y(vm._yMinMax[0]));
 
-    var areas = vm._chart._svg.selectAll(".areas")
+    var areas = vm.chart.svg().selectAll(".areas")
       .data(vm._lines)
     .enter().append("g")
       .attr("class", "areas");
 
-    var pathArea  = vm._chart._svg.selectAll(".areas").append("path")
+    var pathArea  = vm.chart.svg().selectAll(".areas").append("path")
       .attr("class", "area")
       .attr("d", function(d) {
         return vm._area(d.values);
-      })
-      .attr("fill", t.url());
+      }) */
+      //.attr("fill", t.url());
 
     return vm;
   }
 
-  return new Timeline(config);
+  Timeline.init(config);
+  return Timeline;
 }
