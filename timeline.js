@@ -90,11 +90,12 @@ export default function(config, helper) {
   Timeline.data = function(data){
     var vm = this;
 
-    vm._data = data.map(function(d){
+    vm._data = [];
+    data.forEach(function(d){
       d.x = parseDate(d[vm._config.x]);
       d.color = d[vm._config.fill];
       delete(d[vm._config.x]);
-      return d;
+      vm._data.push(d);
     });
 
     vm._lines = vm._config.y ? vm._config.y : vm._config.series;
@@ -117,7 +118,7 @@ export default function(config, helper) {
     vm._xMinMax = d3.extent(vm._data, function(d) { return d.x; });
 
     vm._yMinMax = [
-      d3.min(vm._lines, function(c) { return d3.min(c.values, function(v) { return v.y; }); }),
+      vm._config.yAxis.minZero ? 0 : d3.min(vm._lines, function(c) { return d3.min(c.values, function(v) { return v.y; }); }),
       d3.max(vm._lines, function(c) { return d3.max(c.values, function(v) { return v.y; }); })
     ];
 
@@ -134,7 +135,7 @@ export default function(config, helper) {
       column: vm._config.y,
       type: vm._config.yAxis.scale,
       range: [vm.chart.height, 0],
-      minZero: false
+      minZero: vm._config.yAxis.minZero
     };
     vm._scales.y = vm.utils.generateScale(vm._data, config);
 
@@ -164,16 +165,10 @@ export default function(config, helper) {
       .attr("d", function(d) {
         return vm._line(d.values);
       })
-      /* .style("stroke", function(d){
-        if (d.name == "Airbus"){
-          return "rgb(000,255,000)";
-        }else {
-          return "#000";
-        }
-      }) */
       .attr("stroke", function(d){   
         return vm._scales.color !== false ? vm._scales.color(d.name): vm._getQuantileColor(d.name,'default');
       })
+      .attr("stroke-width", 4)
       .attr('fill','none');
 
 
