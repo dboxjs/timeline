@@ -170,18 +170,24 @@ export default function(config, helper) {
       .attr("stroke-width", 4)
       .attr('fill','none');
 
-    /**By default it draws dots on data points with 8px radius*/
-    var dots = vm.chart.svg().selectAll('.lines').append('circle')
-      .attr('class', 'dot')
-      .attr("cx", function(d, i) { console.log('d is: '); return vm._scales.x(d.x) })
-      .attr("cy", function(d) { return vm._scales.y(d.y) })
-      .attr("r", 4)
-      .style('stroke', function(d){   
-        return vm._scales.color !== false ? vm._scales.color(d.name): vm._getQuantileColor(d.name,'default');
-      })
-      .style('stroke-width', 2)
-      .style('fill', '#fff')
-      .style('fill-opacity', 0.5);
+    /**By default it draws dots on data points with 4px radius*/
+    var dots = vm.chart.svg().selectAll('.dots')
+      .data(vm._lines)
+      .enter().append('g')
+        .attr('class', 'dots')
+        .selectAll('.circle')
+        .data( function(d) { return d.values; })
+        .enter().append('circle')
+          .attr('class', 'dot')
+          .attr("cx", function(d, i) { return vm._scales.x(d.x) })
+          .attr("cy", function(d) { return vm._scales.y(d.y) })
+          .attr("r", 4)
+          .style('stroke', function(d){   
+            return vm._scales.color !== false ? vm._scales.color(d.name): vm._getQuantileColor(d.name,'default');
+          })
+          .style('stroke-width', 2)
+          .style('fill', '#fff')
+          .style('fill-opacity', 0.5);
 
 
     //var t = textures.lines().thicker();
