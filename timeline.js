@@ -16,13 +16,13 @@ export default function(config, helper) {
     vm._axes = {};
 
     vm._line = d3.line()
-      .curve(d3.curveBasis)
+      .curve(d3.curveCardinal)
       .x(function(d) { return vm._scales.x(d.x); })
       .y(function(d) { return vm._scales.y(d.y); });
 
 
     vm._area = d3.area()
-      .curve(d3.curveBasis)
+      .curve(d3.curveCardinal)
       .x(function(d) {
         if (d.alreadyScaled && d.alreadyScaled === true){
           return d.x;
