@@ -8,6 +8,8 @@ export default function(config, helper) {
 
   var Timeline = Object.create(helper);
 
+  var formatter = d3.format(',.1f');
+
   Timeline.init = function(config){
     var vm = this;
     vm._config = config ? config : {};
@@ -36,7 +38,17 @@ export default function(config, helper) {
         }else{
           return vm._scales.y(d.y);
         }
-
+      });
+    
+    vm._tip = d3.tip().attr('class', 'd3-tip')
+      .html(vm._config.tip ? vm._config.tip : function(d) {
+        console.log(d);
+        var html ='';
+        //html += d.x ? ('<span>' + (Number.isNaN(+d.x) ? d.x : formatter(d.x)) + '</span></br>') : '';
+        html += d.y ? ('<span>' + (Number.isNaN(+d.y) ? d.y : formatter(d.y)) + '</span></br>') : '';
+        /* html += d.magnitude ? ('<span>' + (Number.isNaN(+d.magnitude) ? d.magnitude : formatter(d.magnitude)) + '</span></br>') : '';
+        html += d.color ? ('<span>' + (Number.isNaN(+d.color) ? d.color : formatter(d.color)) + '</span>') : ''; */
+        return html;
       });
 
   }
@@ -79,11 +91,12 @@ export default function(config, helper) {
     return vm;
   }
 
-
-  Timeline.end = function(){
+  Timeline.tip = function (tip) {
     var vm = this;
-    return vm._chart;
-  }
+    vm._config.tip = tip;
+    vm._tip.html(vm._config.tip);
+    return vm;
+  };
 
   //-------------------------------
   //Triggered by the chart.js;
@@ -154,6 +167,9 @@ export default function(config, helper) {
 
   Timeline.draw = function(){
     var vm = this;
+    //Call the tip
+    vm.chart.svg().call(vm._tip);
+    
     var lines = vm.chart.svg().selectAll(".lines")
       .data(vm._lines)
     .enter().append("g")
@@ -187,7 +203,19 @@ export default function(config, helper) {
           })
           .style('stroke-width', 2)
           .style('fill', '#fff')
-          .style('fill-opacity', 0.5);
+          .style('fill-opacity', 0.5)
+          .on('mouseover', function (d, i) {
+            if (vm._config.mouseover) {
+              //vm._config.mouseover.call(vm, d, i);
+            }
+            vm._tip.show(d, d3.select(this).node());
+          })
+          .on('mouseout', function (d, i) {
+            if (vm._config.mouseout) {
+              //vm._config.mouseout.call(this, d, i);
+            }
+            vm._tip.hide(d, d3.select(this).node());
+          })
 
 
     //var t = textures.lines().thicker();
