@@ -8,8 +8,6 @@ export default function(config, helper) {
 
   var Timeline = Object.create(helper);
 
-  var formatter = d3.format(',.1f');
-
   Timeline.init = function(config){
     var vm = this;
     vm._config = config ? config : {};
@@ -44,10 +42,10 @@ export default function(config, helper) {
       .html(vm._config.tip ? vm._config.tip : function(d) {
         console.log(d);
         var html ='';
-        //html += d.x ? ('<span>' + (Number.isNaN(+d.x) ? d.x : formatter(d.x)) + '</span></br>') : '';
-        html += d.y ? ('<span>' + (Number.isNaN(+d.y) ? d.y : formatter(d.y)) + '</span></br>') : '';
-        /* html += d.magnitude ? ('<span>' + (Number.isNaN(+d.magnitude) ? d.magnitude : formatter(d.magnitude)) + '</span></br>') : '';
-        html += d.color ? ('<span>' + (Number.isNaN(+d.color) ? d.color : formatter(d.color)) + '</span>') : ''; */
+        //html += d.x ? ('<span>' + (Number.isNaN(+d.x) ? d.x : vm.utils.format(d.x)) + '</span></br>') : '';
+        html += d.y ? ('<span>' + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span></br>') : '';
+        /* html += d.magnitude ? ('<span>' + (Number.isNaN(+d.magnitude) ? d.magnitude : vm.utils.format(d.magnitude)) + '</span></br>') : '';
+        html += d.color ? ('<span>' + (Number.isNaN(+d.color) ? d.color : vm.utils.format(d.color)) + '</span>') : ''; */
         return html;
       });
 
