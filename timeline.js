@@ -1,7 +1,8 @@
+import * as d3 from 'd3'
+
 /* Simple timeline example
  * Single and multiline timelines
  */
-
 export default function(config, helper) {
 
   var parseDate = d3.timeParse('%Y-%m-%d');
