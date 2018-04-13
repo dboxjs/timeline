@@ -39,7 +39,7 @@ export default function(config, helper) {
         }
       });
     
-    vm._tip = d3.tip().attr('class', 'd3-tip')
+    vm._tip = vm.utils.d3.tip().attr('class', 'd3-tip')
       .html(vm._config.tip ? vm._config.tip : function(d) {
         console.log(d);
         var html ='';
@@ -101,7 +101,7 @@ export default function(config, helper) {
   //Triggered by the chart.js;
   Timeline.data = function(data){
     var vm = this;
-
+    
     vm._data = [];
     data.forEach(function(d){
       d.x = parseDate(d[vm._config.x]);
