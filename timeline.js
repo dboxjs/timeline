@@ -191,7 +191,7 @@ export default function(config, helper) {
       .enter().append('g')
         .attr('class', 'dots')
         .selectAll('.circle')
-        .data( function(d) { return d.values; })
+        .data( function(d) { d.values.forEach((el) => {el.name = d.name;}); return d.values; })
         .enter().append('circle')
           .attr('class', 'dot')
           .attr("cx", function(d, i) { return vm._scales.x(d.x) })
