@@ -41,8 +41,8 @@ export default function(config, helper) {
     
     vm._tip = vm.utils.d3.tip().attr('class', 'd3-tip')
       .html(vm._config.tip ? vm._config.tip : function(d) {
-        console.log(d);
         var html ='';
+        html += d.name + '<br>';
         //html += d.x ? ('<span>' + (Number.isNaN(+d.x) ? d.x : vm.utils.format(d.x)) + '</span></br>') : '';
         html += d.y ? ('<span>' + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span></br>') : '';
         /* html += d.magnitude ? ('<span>' + (Number.isNaN(+d.magnitude) ? d.magnitude : vm.utils.format(d.magnitude)) + '</span></br>') : '';
@@ -191,11 +191,18 @@ export default function(config, helper) {
       .enter().append('g')
         .attr('class', 'dots')
         .selectAll('.circle')
-        .data( function(d) { d.values.forEach((el) => {el.name = d.name;}); return d.values; })
+        .data( function(d) { 
+          d.values.forEach((el) => {el.name = d.name;}); 
+          return d.values; 
+        })
         .enter().append('circle')
           .attr('class', 'dot')
-          .attr("cx", function(d, i) { return vm._scales.x(d.x) })
-          .attr("cy", function(d) { return vm._scales.y(d.y) })
+          .attr("cx", function(d, i) { 
+            return vm._scales.x(d.x); 
+          })
+          .attr("cy", function(d) { 
+            return vm._scales.y(d.y); 
+          })
           .attr("r", 4)
           .style('stroke', function(d){   
             return vm._scales.color !== false ? vm._scales.color(d.name): vm._getQuantileColor(d.name,'default');
