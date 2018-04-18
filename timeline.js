@@ -5,7 +5,6 @@ import * as d3 from 'd3';
  */
 export default function(config, helper) {
 
-  var parseDate = d3.timeParse('%Y-%m-%d');
 
   var Timeline = Object.create(helper);
 
@@ -15,6 +14,8 @@ export default function(config, helper) {
     vm._data = [];
     vm._scales ={};
     vm._axes = {};
+
+    vm._config.parseDate = d3.timeParse('%Y-%m-%d');
 
     vm._line = d3.line()
       .curve(d3.curveCardinal)
@@ -57,6 +58,12 @@ export default function(config, helper) {
   Timeline.x = function(col){
     var vm = this;
     vm._config.x = col;
+    return vm;
+  }
+
+  Timeline.parseDate = function(format){
+    var vm = this;
+    vm._config.parseDate = d3.timeParse(format);
     return vm;
   }
 
@@ -104,7 +111,7 @@ export default function(config, helper) {
     
     vm._data = [];
     data.forEach(function(d){
-      d.x = parseDate(d[vm._config.x]);
+      d.x = vm._config.parseDate(d[vm._config.x]);
       d.color = d[vm._config.fill];
       delete(d[vm._config.x]);
       vm._data.push(d);
@@ -191,10 +198,10 @@ export default function(config, helper) {
       .enter().append('g')
         .attr('class', 'dots')
         .selectAll('.circle')
-        .data( function(d) { d.values.forEach((el) => {el.name = d.name;}); return d.values; })
+        .data( function(d) {d.values.forEach((el) => {el.name = d.name;}); return d.values; })
         .enter().append('circle')
           .attr('class', 'dot')
-          .attr("cx", function(d, i) { return vm._scales.x(d.x) })
+          .attr("cx", function(d) { return vm._scales.x(d.x) })
           .attr("cy", function(d) { return vm._scales.y(d.y) })
           .attr("r", 4)
           .style('stroke', function(d){   
