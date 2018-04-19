@@ -43,14 +43,26 @@ export default function(config, helper) {
       });
     
     vm._tip = vm.utils.d3.tip().attr('class', 'd3-tip')
-      .html(vm._config.tip ? vm._config.tip : function(d) {
-        var html ='';
+      .html(vm._config.tip && vm._config.tip.html ? vm._config.tip.html : function(d) {
+
+        var backgroundColor = vm._config.tip && vm._config.tip.backgroundColor ? vm._config.tip.backgroundColor : 'rgba(0, 0, 0, 0.8)';
+        var titleColor = vm._config.tip && vm._config.tip.titleColor ? vm._config.tip.titleColor : 'white';
+        var scaleColor = vm._scales.color !== false ? vm._scales.color(d.name): vm._getQuantileColor(d.name,'default');
+
+        var html = `<div style='line-height: 1; font-weight: bold; background-color: ${backgroundColor}; padding: 12px; border-radius: 2px;'>`;
+        html += `<strong style='color:${titleColor}'>`+d.name+": </strong>";
+        html += d.y ? (`<span style='color:${scaleColor}'>` + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span>') : '';
+        html += "</div>";
+
+        return html;
+
+        /*var html ='';
         html += d.name + '<br>';
         //html += d.x ? ('<span>' + (Number.isNaN(+d.x) ? d.x : vm.utils.format(d.x)) + '</span></br>') : '';
         html += d.y ? ('<span>' + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span></br>') : '';
-        /* html += d.magnitude ? ('<span>' + (Number.isNaN(+d.magnitude) ? d.magnitude : vm.utils.format(d.magnitude)) + '</span></br>') : '';
-        html += d.color ? ('<span>' + (Number.isNaN(+d.color) ? d.color : vm.utils.format(d.color)) + '</span>') : ''; */
-        return html;
+        html += d.magnitude ? ('<span>' + (Number.isNaN(+d.magnitude) ? d.magnitude : vm.utils.format(d.magnitude)) + '</span></br>') : '';
+        html += d.color ? ('<span>' + (Number.isNaN(+d.color) ? d.color : vm.utils.format(d.color)) + '</span>') : '';
+        return html;*/
       });
 
   }
