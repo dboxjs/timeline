@@ -18,13 +18,15 @@ export default function(config, helper) {
     vm._config.parseDate = d3.timeParse('%Y-%m-%d');
 
     vm._line = d3.line()
-      .curve(d3.curveCardinal)
+      //.curve(d3.curveCardinal)
+      .curve(d3.curveLinear)
       .x(function(d) { return vm._scales.x(d.x); })
       .y(function(d) { return vm._scales.y(d.y); });
 
 
     vm._area = d3.area()
-      .curve(d3.curveCardinal)
+      //.curve(d3.curveCardinal)
+      .curve(d3.curveLinear)
       .x(function(d) {
         if (d.alreadyScaled && d.alreadyScaled === true){
           return d.x;
@@ -116,6 +118,11 @@ export default function(config, helper) {
       delete(d[vm._config.x]);
       vm._data.push(d);
     });
+
+    //Sort the data by d.x
+    data = data.sort(function(a, b){
+      return d3.ascending(a.x, b.x);
+    })
 
     vm._lines = vm._config.y ? vm._config.y : vm._config.series;
 
