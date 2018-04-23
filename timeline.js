@@ -45,13 +45,24 @@ export default function(config, helper) {
     vm._tip = vm.utils.d3.tip().attr('class', 'd3-tip')
       .html(vm._config.tip && vm._config.tip.html ? vm._config.tip.html : function(d) {
 
-        var backgroundColor = vm._config.tip && vm._config.tip.backgroundColor ? vm._config.tip.backgroundColor : 'rgba(0, 0, 0, 0.8)';
-        var titleColor = vm._config.tip && vm._config.tip.titleColor ? vm._config.tip.titleColor : 'white';
-        var scaleColor = vm._scales.color !== false ? vm._scales.color(d.name): vm._getQuantileColor(d.name,'default');
-
-        var html = `<div style='line-height: 1; font-weight: bold; background-color: ${backgroundColor}; padding: 12px; border-radius: 2px;'>`;
-        html += `<strong style='color:${titleColor}'>`+d.name+": </strong>";
-        html += d.y ? (`<span style='color:${scaleColor}'>` + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span>') : '';
+        let scaleColor = vm._scales.color !== false ? vm._scales.color(d.name): vm._getQuantileColor(d.name,'default');
+        if (vm.chart.config.styles) {
+          var html = `<div style='
+            line-height: 1; 
+            opacity: ${vm.chart.style.tooltip.opacity}; 
+            font-weight: ${vm.chart.style.tooltip.text.fontWeight}; 
+            font-size: ${vm.chart.style.tooltip.text.fontSize}; 
+            color: ${vm.chart.style.tooltip.text.textColor};
+            font-family: ${vm.chart.style.tooltip.text.fontFamily};
+            background-color: ${vm.chart.style.tooltip.backgroundColor}; 
+            padding: ${vm.chart.style.tooltip.text.padding};   
+            border: ${vm.chart.style.tooltip.border.width} solid ${vm.chart.style.tooltip.border.color};  
+            border-radius:  ${vm.chart.style.tooltip.border.radius};'>`;
+          html += `<strong style='color:${vm.chart.style.tooltip.text.fontColor};'>`;
+        }
+        else { var html = "<div> <strong>"; }
+        html += `<strong style='color:${scaleColor}'>` + d.name + ": </strong>";
+        html += d.y ? (`<span >` + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span>') : '';
         html += "</div>";
 
         return html;
