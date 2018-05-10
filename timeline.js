@@ -190,12 +190,20 @@ export default function(config, helper) {
 
 
     vm._scales.x.domain(vm._xMinMax)
-    vm._scales.y.domain(vm._yMinMax)
+    vm._scales.y.domain(vm._yMinMax).nice();
 
     if(vm._config.hasOwnProperty('colors'))
       vm._scales.color = d3.scaleOrdinal(vm._config.colors);
     else
       vm._scales.color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    if (vm._scales.x.domain()[0].getTime() == vm._scales.x.domain()[1].getTime()) { // max and min are the same, there's only one datum
+      var oldDomain = vm._scales.x.domain();
+      var oldRange = vm._scales.x.range();
+      vm._scales.x
+        .domain([0, oldDomain[0], oldDomain[1]])
+        .range([0, oldRange[0] + (oldRange[1] - oldRange[0]) / 2, oldRange[1]]);
+    }
 
     return vm;
   }
