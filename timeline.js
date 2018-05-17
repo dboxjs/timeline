@@ -20,6 +20,7 @@ export default function(config, helper) {
     vm._line = d3.line()
       //.curve(d3.curveCardinal)
       .curve(d3.curveLinear)
+      .defined(function(d) { return d.y; })
       .x(function(d) { return vm._scales.x(d.x); })
       .y(function(d) { return vm._scales.y(d.y); });
 
@@ -157,6 +158,12 @@ export default function(config, helper) {
         })
       };
     });
+    
+    vm._lines.forEach((n) => {
+      n.values = n.values.filter((v) => {
+        return !isNaN(v.y)
+      });
+    });
 
     return vm;
   }
@@ -213,7 +220,7 @@ export default function(config, helper) {
     var vm = this;
     //Call the tip
     vm.chart.svg().call(vm._tip);
-    
+
     var lines = vm.chart.svg().selectAll(".lines")
       .data(vm._lines)
     .enter().append("g")
@@ -236,16 +243,16 @@ export default function(config, helper) {
       .enter().append('g')
         .attr('class', 'dots')
         .selectAll('.circle')
-        .data( function(d) { 
+        .data( function(d) {
           d.values.forEach((el) => {el.name = d.name;}); 
           return d.values; 
         })
         .enter().append('circle')
           .attr('class', 'dot')
-          .attr("cx", function(d, i) { 
+          .attr("cx", function(d, i) {
             return vm._scales.x(d.x); 
           })
-          .attr("cy", function(d) { 
+          .attr("cy", function(d) {
             return vm._scales.y(d.y); 
           })
           .attr("r", 4)
