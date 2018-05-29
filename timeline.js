@@ -207,8 +207,9 @@ export default function(config, helper) {
     if (vm._scales.x.domain()[0].getTime() == vm._scales.x.domain()[1].getTime()) { // max and min are the same, there's only one datum
       var oldDomain = vm._scales.x.domain();
       var oldRange = vm._scales.x.range();
+
       vm._scales.x
-        .domain([0, oldDomain[0], oldDomain[1]])
+        .domain([new Date(oldDomain[0].getTime() - 1), oldDomain[0] , oldDomain[1]])
         .range([0, oldRange[0] + (oldRange[1] - oldRange[0]) / 2, oldRange[1]]);
     }
 
@@ -220,6 +221,10 @@ export default function(config, helper) {
     var vm = this;
     //Call the tip
     vm.chart.svg().call(vm._tip);
+
+    if (vm._scales.x.domain().length === 3) {
+      vm.chart.svg().select('.x.axis .tick').remove();
+    }
 
     var lines = vm.chart.svg().selectAll(".lines")
       .data(vm._lines)
