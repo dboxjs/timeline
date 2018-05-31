@@ -137,23 +137,28 @@ export default function(config, helper) {
     
     vm._data = [];
     data.forEach(function(d){
-      d.x = vm._config.parseDate(d[vm._config.x]);
-      d.color = d[vm._config.fill];
-      delete(d[vm._config.x]);
-      vm._data.push(d);
+      var tmp = Object.assign({}, d);
+      if (d[vm._config.x] && d[vm._config.x].getTime() && !Number.isNaN(d[vm._config.x].getTime())) {
+        tmp.x = d[vm._config.x];
+      } else {
+        tmp.x = vm._config.parseDate(d[vm._config.x]);
+      }
+      tmp.color = d[vm._config.fill];
+      delete(tmp[vm._config.x]);
+      vm._data.push(tmp);
     });
 
     //Sort the data by d.x
-    data = data.sort(function(a, b){
+    vm._data = vm._data.sort(function (a, b) {
       return d3.ascending(a.x, b.x);
-    })
+    });
 
     vm._lines = vm._config.y ? vm._config.y : vm._config.series;
 
     vm._lines = vm._lines.map(function(name) {
       return {
         name: name,
-        values: data.map(function(d) {
+        values: vm._data.map(function(d) {
           return {x: d.x, y: +d[name]};
         })
       };
@@ -222,6 +227,9 @@ export default function(config, helper) {
     //Call the tip
     vm.chart.svg().call(vm._tip);
 
+    console.log(vm._scales.x.domain());
+    console.log(vm._scales.x.range());
+
     if (vm._scales.x.domain().length === 3) {
       vm.chart.svg().select('.x.axis .tick').remove();
     }
@@ -234,6 +242,7 @@ export default function(config, helper) {
     var path = vm.chart.svg().selectAll(".lines").append("path")
       .attr("class", "line")
       .attr("d", function(d) {
+        console.log(d.values);
         return vm._line(d.values);
       })
       .attr("stroke", function(d){   
