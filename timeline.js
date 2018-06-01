@@ -16,32 +16,7 @@ export default function(config, helper) {
     vm._axes = {};
 
     vm._config.parseDate = d3.timeParse('%Y-%m-%d');
-
-    vm._line = d3.line()
-      //.curve(d3.curveCardinal)
-      .curve(d3.curveLinear)
-      .defined(function(d) { return d.y; })
-      .x(function(d) { return vm._scales.x(d.x); })
-      .y(function(d) { return vm._scales.y(d.y); });
-
-
-    vm._area = d3.area()
-      //.curve(d3.curveCardinal)
-      .curve(d3.curveLinear)
-      .x(function(d) {
-        if (d.alreadyScaled && d.alreadyScaled === true){
-          return d.x;
-        }else{
-          return vm._scales.x(d.x);
-        }
-      })
-      .y1(function(d) {
-        if (d.alreadyScaled && d.alreadyScaled === true){
-          return d.y;
-        }else{
-          return vm._scales.y(d.y);
-        }
-      });
+    vm._config.curve = d3.curveLinear;
     
     vm._tip = vm.utils.d3.tip().attr('class', 'd3-tip')
       .html(vm._config.tip && vm._config.tip.html ? vm._config.tip.html : function(d) {
@@ -102,6 +77,12 @@ export default function(config, helper) {
   Timeline.series = function(arr){
     var vm = this;
     vm._config.series = arr;
+    return vm;
+  }
+
+  Timeline.curve = function (curve) {
+    var vm = this;
+    vm._config.curve = curve;
     return vm;
   }
 
@@ -169,6 +150,36 @@ export default function(config, helper) {
         return !isNaN(v.y)
       });
     });
+
+    vm._line = d3.line()
+      .curve(vm._config.curve)
+      .defined(function (d) {
+        return d.y !== undefined;
+      })
+      .x(function (d) {
+        return vm._scales.x(d.x);
+      })
+      .y(function (d) {
+        return vm._scales.y(d.y);
+      });
+
+
+    vm._area = d3.area()
+      .curve(vm._config.curve)
+      .x(function (d) {
+        if (d.alreadyScaled && d.alreadyScaled === true) {
+          return d.x;
+        } else {
+          return vm._scales.x(d.x);
+        }
+      })
+      .y1(function (d) {
+        if (d.alreadyScaled && d.alreadyScaled === true) {
+          return d.y;
+        } else {
+          return vm._scales.y(d.y);
+        }
+      });
 
     return vm;
   }
