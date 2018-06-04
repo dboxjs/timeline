@@ -115,15 +115,21 @@ export default function(config, helper) {
   //Triggered by the chart.js;
   Timeline.data = function(data){
     var vm = this;
-    
+
     vm._data = [];
     data.forEach(function(d){
       var tmp = Object.assign({}, d);
-      if (d[vm._config.x] && d[vm._config.x].getTime() && !Number.isNaN(d[vm._config.x].getTime())) {
-        tmp.x = d[vm._config.x];
-      } else {
-        tmp.x = vm._config.parseDate(d[vm._config.x]);
+      if (d[vm._config.x]) {
+        try {
+          d[vm._config.x].getTime();
+          if (!Number.isNaN(d[vm._config.x].getTime())) {
+            tmp.x = d[vm._config.x];
+          }
+        } catch (err) {
+          tmp.x = vm._config.parseDate(d[vm._config.x]);
+        }
       }
+
       tmp.color = d[vm._config.fill];
       delete(tmp[vm._config.x]);
       vm._data.push(tmp);
@@ -238,8 +244,6 @@ export default function(config, helper) {
     //Call the tip
     vm.chart.svg().call(vm._tip);
 
-    console.log(vm._scales.x.domain());
-    console.log(vm._scales.x.range());
 
     if (vm._scales.x.domain().length === 3) {
       vm.chart.svg().select('.x.axis .tick').remove();
@@ -253,7 +257,6 @@ export default function(config, helper) {
     var path = vm.chart.svg().selectAll(".lines").append("path")
       .attr("class", "line")
       .attr("d", function(d) {
-        console.log(d.values);
         return vm._line(d.values);
       })
       .attr("stroke", function(d){   
