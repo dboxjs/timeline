@@ -115,7 +115,7 @@ export default function(config, helper) {
   //Triggered by the chart.js;
   Timeline.data = function(data){
     var vm = this;
-
+    console.log(data, 'here');
     vm._data = [];
     data.forEach(function(d){
       var tmp = Object.assign({}, d);
@@ -238,12 +238,44 @@ export default function(config, helper) {
     return vm;
   }
 
+  Timeline.drawLabels = function() {
+    var vm = this;
+    var chartW = vm.chart.width;
+
+    vm.chart.svg().selectAll('.dots').each(function(dat) {
+      var el = this;
+      dat.values.forEach(function(c, index) {
+        d3.select(el).append('text')
+          .attr('class', 'dbox-label')
+          .attr('transform', function(d) {
+            if (vm._scales.x(d.values[index].x) >= chartW) {
+              return 'translate (' + (vm._scales.x(d.values[index].x) - 100) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+            }
+            return 'translate (' + (vm._scales.x(d.values[index].x) + 100) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+          })
+          .text(function(d) {
+            return c.y ? d.name + '; ' + c.x.getFullYear() + '; ' + c.y.toFixed(2) : '';
+          });
+
+        d3.select(el).append('text')
+          .attr('class', 'dbox-label-coefficient')
+          .attr('transform', function(d) {
+            if (vm._scales.x(d.values[index].x) >= chartW) {
+              return 'translate (' + (vm._scales.x(d.values[index].x) - 100) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
+            }
+            return 'translate (' + (vm._scales.x(d.values[index].x) + 100) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
+          })
+          .text(function(d) {
+            return vm._data[index][d.name + 'coefficient'] ? '(' + vm._data[index][d.name + 'coefficient'].toFixed(2) +')' : '(-)';
+          });
+      });
+    });
+  }
 
   Timeline.draw = function(){
     var vm = this;
     //Call the tip
     vm.chart.svg().call(vm._tip);
-
 
     if (vm._scales.x.domain().length === 3) {
       vm.chart.svg().select('.x.axis .tick').remove();
@@ -303,7 +335,7 @@ export default function(config, helper) {
             vm._tip.hide(d, d3.select(this).node());
           })
 
-
+    Timeline.drawLabels();
     //var t = textures.lines().thicker();
 
     //vm.chart.svg().call(t);
