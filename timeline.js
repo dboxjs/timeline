@@ -38,7 +38,7 @@ export default function(config, helper) {
         }
         else { var html = "<div> <strong>"; }
         html += `<strong style='color:${scaleColor}'>` + d.name + ": </strong>";
-        html += d.y ? (`<span >` + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span>') : '';
+        html += d.y ? (`<span >` + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y), 1) + '</span>') : '';
         html += "</div>";
 
         return html;
@@ -115,7 +115,7 @@ export default function(config, helper) {
   //Triggered by the chart.js;
   Timeline.data = function(data){
     var vm = this;
-    console.log(data, 'here');
+
     vm._data = [];
     data.forEach(function(d){
       var tmp = Object.assign({}, d);
@@ -254,7 +254,7 @@ export default function(config, helper) {
             return 'translate (' + (vm._scales.x(d.values[index].x) + 100) + ',' + (vm._scales.y(d.values[index].y)) + ')';
           })
           .text(function(d) {
-            return c.y ? d.name + '; ' + c.x.getFullYear() + '; ' + c.y.toFixed(2) : '';
+            return c.y ? d.name + '; ' + c.x.getFullYear() + '; ' + c.y.toFixed(1) : '';
           });
 
         d3.select(el).append('text')
@@ -266,7 +266,7 @@ export default function(config, helper) {
             return 'translate (' + (vm._scales.x(d.values[index].x) + 100) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
           })
           .text(function(d) {
-            return vm._data[index][d.name + 'coefficient'] ? '(' + vm._data[index][d.name + 'coefficient'].toFixed(2) +')' : '(-)';
+            return vm._data[index][d.name + 'coefficient'] ? '(' + vm._data[index][d.name + 'coefficient'].toFixed(1) +')' : '(-)';
           });
       });
     });
