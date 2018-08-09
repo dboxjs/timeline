@@ -247,9 +247,9 @@ export default function(config, helper) {
           .attr('class', 'dbox-label')
           .attr('transform', function(d) {
             if (vm._scales.x(d.values[index].x) >= chartW) {
-              return 'translate (' + (vm._scales.x(d.values[index].x) - 100) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+              return 'translate (' + (vm._scales.x(d.values[index].x) - 50) + ',' + (vm._scales.y(d.values[index].y)) + ')';
             }
-            return 'translate (' + (vm._scales.x(d.values[index].x) + 100) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+            return 'translate (' + (vm._scales.x(d.values[index].x) + 50) + ',' + (vm._scales.y(d.values[index].y)) + ')';
           })
           .text(function() {
             return c.y ? c.y.toFixed(1) : '';
@@ -259,9 +259,9 @@ export default function(config, helper) {
           .attr('class', 'dbox-label-coefficient')
           .attr('transform', function(d) {
             if (vm._scales.x(d.values[index].x) >= chartW) {
-              return 'translate (' + (vm._scales.x(d.values[index].x) - 100) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
+              return 'translate (' + (vm._scales.x(d.values[index].x) - 50) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
             }
-            return 'translate (' + (vm._scales.x(d.values[index].x) + 100) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
+            return 'translate (' + (vm._scales.x(d.values[index].x) + 50) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
           })
           .text(function(d) {
             return vm._data[index][d.name + 'coefficient'] ? '(' + vm._data[index][d.name + 'coefficient'].toFixed(1) +')' : '(-)';
