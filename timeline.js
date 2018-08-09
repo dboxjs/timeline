@@ -266,7 +266,7 @@ export default function(config, helper) {
             return 'translate (' + (vm._scales.x(d.values[index].x) + 100) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
           })
           .text(function(d) {
-            return vm._data[index][d.name + 'coefficient'] ? '(' + vm._data[index][d.name + 'coefficient'].toFixed(1) +')' : '(-)';
+            return !Number.isNaN(vm._data[index][d.name + 'coefficient']) ? '(' + vm._data[index][d.name + 'coefficient'].toFixed(1) +')' : '(-)';
           });
       });
     });
