@@ -208,7 +208,6 @@ export default function(config, helper) {
     };
     vm._scales.x = vm.utils.generateScale(vm._data, config);
 
-
     config = {
       column: vm._config.y,
       type: vm._config.yAxis.scale,
@@ -217,8 +216,7 @@ export default function(config, helper) {
     };
     vm._scales.y = vm.utils.generateScale(vm._data, config);
 
-
-    vm._scales.x.domain(vm._xMinMax)
+    vm._scales.x.domain(vm._xMinMax);
     vm._scales.y.domain(vm._yMinMax).nice();
 
     if(vm._config.hasOwnProperty('colors'))
@@ -249,21 +247,21 @@ export default function(config, helper) {
           .attr('class', 'dbox-label')
           .attr('transform', function(d) {
             if (vm._scales.x(d.values[index].x) >= chartW) {
-              return 'translate (' + (vm._scales.x(d.values[index].x) - 100) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+              return 'translate (' + (vm._scales.x(d.values[index].x) - 50) + ',' + (vm._scales.y(d.values[index].y)) + ')';
             }
-            return 'translate (' + (vm._scales.x(d.values[index].x) + 100) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+            return 'translate (' + (vm._scales.x(d.values[index].x) + 50) + ',' + (vm._scales.y(d.values[index].y)) + ')';
           })
-          .text(function(d) {
-            return c.y ? d.name + '; ' + c.x.getFullYear() + '; ' + c.y.toFixed(1) : '';
+          .text(function() {
+            return c.y ? c.y.toFixed(1) : '';
           });
 
         d3.select(el).append('text')
           .attr('class', 'dbox-label-coefficient')
           .attr('transform', function(d) {
             if (vm._scales.x(d.values[index].x) >= chartW) {
-              return 'translate (' + (vm._scales.x(d.values[index].x) - 100) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
+              return 'translate (' + (vm._scales.x(d.values[index].x) - 50) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
             }
-            return 'translate (' + (vm._scales.x(d.values[index].x) + 100) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
+            return 'translate (' + (vm._scales.x(d.values[index].x) + 50) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
           })
           .text(function(d) {
             return !Number.isNaN(vm._data[index][d.name + 'coefficient']) ? '(' + vm._data[index][d.name + 'coefficient'].toFixed(1) +')' : '(-)';
