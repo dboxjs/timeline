@@ -254,18 +254,6 @@ export default function(config, helper) {
           .text(function() {
             return c.y ? c.y.toFixed(1) : '';
           });
-
-        d3.select(el).append('text')
-          .attr('class', 'dbox-label-coefficient')
-          .attr('transform', function(d) {
-            if (vm._scales.x(d.values[index].x) >= chartW) {
-              return 'translate (' + (vm._scales.x(d.values[index].x) - 50) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
-            }
-            return 'translate (' + (vm._scales.x(d.values[index].x) + 50) + ',' + (vm._scales.y(d.values[index].y) + 15) + ')';
-          })
-          .text(function(d) {
-            return !Number.isNaN(vm._data[index][d.name + 'coefficient']) ? '(' + vm._data[index][d.name + 'coefficient'].toFixed(1) +')' : '(-)';
-          });
       });
     });
   }
