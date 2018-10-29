@@ -245,14 +245,15 @@ export default function(config, helper) {
       dat.values.forEach(function(c, index) {
         d3.select(el).append('text')
           .attr('class', 'dbox-label')
+          .attr('text-anchor', 'start')
           .attr('transform', function(d) {
             if (vm._scales.x(d.values[index].x) >= chartW) {
-              return 'translate (' + (vm._scales.x(d.values[index].x) - 50) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+              return 'translate (' + (vm._scales.x(d.values[index].x) + 6) + ',' + (vm._scales.y(d.values[index].y) + 4) + ')';
             }
-            return 'translate (' + (vm._scales.x(d.values[index].x) + 50) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+            return 'translate (' + (vm._scales.x(d.values[index].x) + 6) + ',' + (vm._scales.y(d.values[index].y)  + 4) + ')';
           })
           .text(function() {
-            return c.y ? c.y.toFixed(1) : '';
+            return c.y ? c.y % 1 === 0 ? c.y.toFixed(0) : c.y.toFixed(1) : '';
           });
       });
     });
