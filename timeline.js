@@ -248,7 +248,8 @@ export default function(config, helper) {
           .attr('text-anchor', 'start')
           .attr('transform', function(d) {
             if (vm._scales.x(d.values[index].x) >= chartW) {
-              return 'translate (' + (vm._scales.x(d.values[index].x) + 6) + ',' + (vm._scales.y(d.values[index].y) + 4) + ')';
+              d3.select(this).attr('text-anchor','end');
+              return 'translate (' + (vm._scales.x(d.values[index].x) - 8) + ',' + (vm._scales.y(d.values[index].y) + 5) + ')';
             }
             return 'translate (' + (vm._scales.x(d.values[index].x) + 6) + ',' + (vm._scales.y(d.values[index].y)  + 4) + ')';
           })
