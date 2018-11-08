@@ -247,12 +247,14 @@ export default function(config, helper) {
           .attr('class', 'dbox-label')
           .attr('transform', function(d) {
             if (vm._scales.x(d.values[index].x) >= chartW) {
-              return 'translate (' + (vm._scales.x(d.values[index].x) - 50) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+              d3.select(this).attr('text-anchor', 'end');
+              return 'translate (' + (vm._scales.x(d.values[index].x) - 10) + ',' + (vm._scales.y(d.values[index].y) + 4) + ')';
             }
-            return 'translate (' + (vm._scales.x(d.values[index].x) + 50) + ',' + (vm._scales.y(d.values[index].y)) + ')';
+            d3.select(this).attr('text-anchor', 'start');
+            return 'translate (' + (vm._scales.x(d.values[index].x) + 10) + ',' + (vm._scales.y(d.values[index].y) + 4) + ')';
           })
           .text(function() {
-            return c.y ? c.y.toFixed(1) : '';
+            return c.y ? vm.utils.format(c.y, 1, true) : '';
           });
       });
     });
