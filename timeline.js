@@ -237,6 +237,7 @@ export default function(config, helper) {
       dat.values.forEach(function(c, index) {
         d3.select(el).append('text')
           .attr('class', 'dbox-label')
+          .attr('text-anchor', 'start')
           .attr('transform', function(d) {
             if (vm._scales.x(d.values[index].x) >= chartW) {
               d3.select(this).attr('text-anchor', 'end');
