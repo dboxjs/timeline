@@ -38,18 +38,10 @@ export default function(config, helper) {
         }
         else { var html = "<div> <strong>"; }
         html += `<strong style='color:${scaleColor}'>` + d.name + ": </strong>";
-        html += d.y ? (`<span >` + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y), 1) + '</span>') : '';
+        html += d.y ? (`<span >` + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span>') : '';
         html += "</div>";
 
         return html;
-
-        /*var html ='';
-        html += d.name + '<br>';
-        //html += d.x ? ('<span>' + (Number.isNaN(+d.x) ? d.x : vm.utils.format(d.x)) + '</span></br>') : '';
-        html += d.y ? ('<span>' + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span></br>') : '';
-        html += d.magnitude ? ('<span>' + (Number.isNaN(+d.magnitude) ? d.magnitude : vm.utils.format(d.magnitude)) + '</span></br>') : '';
-        html += d.color ? ('<span>' + (Number.isNaN(+d.color) ? d.color : vm.utils.format(d.color)) + '</span>') : '';
-        return html;*/
       });
 
   }
@@ -254,7 +246,7 @@ export default function(config, helper) {
             return 'translate (' + (vm._scales.x(d.values[index].x) + 10) + ',' + (vm._scales.y(d.values[index].y) + 4) + ')';
           })
           .text(function() {
-            return c.y ? vm.utils.format(c.y, 1, true) : '';
+            return c.y ? vm.utils.format(c.y, true) : '';
           });
       });
     });
