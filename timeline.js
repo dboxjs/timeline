@@ -38,7 +38,7 @@ export default function(config, helper) {
         }
         else { var html = "<div> <strong>"; }
         html += `<strong style='color:${scaleColor}'>` + d.name + ": </strong>";
-        html += d.y ? (`<span >` + (Number.isNaN(+d.y) ? d.y : vm.utils.format(d.y)) + '</span>') : '';
+        html += d.y ? (`<span >` + (Number.isNaN(+d.y) ? d.y : vm.utils.format(vm._config.yAxis)(d.y)) + '</span>') : '';
         html += "</div>";
 
         return html;
@@ -247,7 +247,7 @@ export default function(config, helper) {
             return 'translate (' + (vm._scales.x(d.values[index].x) + 10) + ',' + (vm._scales.y(d.values[index].y) + 4) + ')';
           })
           .text(function() {
-            return c.y ? vm.utils.format(c.y, true) : '';
+            return c.y ? vm.utils.format(vm._config.yAxis, true)(c.y) : '';
           });
       });
     });
