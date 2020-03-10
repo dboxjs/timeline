@@ -1,6 +1,6 @@
 {
   "name": "@dboxjs/timeline",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "dboxjs timeline",
   "main": "timeline.js",
   "scripts": {
